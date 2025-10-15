@@ -63,7 +63,7 @@ const handleDelete=(id:number)=>{
 }
 const complete=(id:number)=>{
   setTasks(tasks.map((task)=>
-  task.id ===id ? {...task,isCompleted:!task.isCompleted}:task
+  task.id ===id ? {...task, isCompleted:!task.isCompleted}:task
   ))
 }
   
@@ -76,19 +76,19 @@ const complete=(id:number)=>{
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col max-w-md w-full'>
           <label className='text-gray-700 mb-3 mt-10' htmlFor='add'>Write your task</label>
           <input {...register('title')} id='addTask' placeholder='Add your task' 
-          className=' border p-3' />
+          className=' border p-3 ' />
           {errors.title && (<p className='text-red-500 text-sm'>{errors.title.message}</p>)}
         
           <button
   type='submit'
-  className="bg-blue-400 p-2 rounded-lg mt-5"
+  className="bg-blue-400 p-2 rounded-lg mt-5 text-white"
 >
   {editing ? "Update": "Add"}
 </button>
-          <ul className='mt-5'>
+          <ul className='mt-5 '>
             {tasks.map((task) => (
-              <li className='flex flex-row mt-5 bg-blue-300 p-3' key={task.id}>
-                <span onClick={()=>{complete(task.id)}} className={`flex ${task.isCompleted ? 'line-through text-gray-500': 'text-gray-800'}`}>{task.title}</span>
+              <li className='flex flex-row mt-5 bg-blue-300 p-3 rounded-lg text-white'  key={task.id}>
+                <span onClick={()=>{complete(task.id)}} className={`flex ${task.isCompleted ? 'line-through text-white-500': 'text-white-800'}`}>{task.title}</span>
               
 
               <svg onClick={()=>handleEdit(task.id)}  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 ml-auto flex gap-4">

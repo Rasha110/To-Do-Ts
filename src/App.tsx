@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react';
 import './App.css'
 import * as yup from "yup";
@@ -20,11 +20,20 @@ function App() {
 
 const {register,handleSubmit,setValue,reset,formState:{errors},}=useForm<formInputs>({resolver:yupResolver(schema)})
 
-  const [tasks, setTasks] = React.useState<Task[]>([{
-    id: 1, title: "made to do list", isCompleted: false
-  },])
+  const [tasks, setTasks] = useState<Task[]>(()=> 
+    
+    {const saved=localStorage.getItem("tasks");
+  return saved ? JSON.parse(saved):[];})
+
+  
   const [editing,setEditing]=useState(false);
   const [editId,setEditId]=useState<number |null>(null);
+
+
+ 
+useEffect(()=>{
+    localStorage.setItem("tasks",JSON.stringify(tasks))
+  },[tasks]);
 
  const onSubmit =(data:formInputs) => {
     if (editing && editId !== null) {
@@ -61,15 +70,15 @@ const complete=(id:number)=>{
   return (
     <>
       <div className='flex flex-col justify-center items-center min-h-screen '>
-        <h1 className="text-3xl font-bold text-gray-700 text-center mt-10">
+        <h1 className="text-3xl font-bold text-gray-700 text-center mb-10">
           To-Do App
         </h1>
         <form onSubmit={handleSubmit(onSubmit)} className='flex flex-col max-w-md w-full'>
-          <label htmlFor='add'>Write your task</label><br />
+          <label className='text-gray-700 mb-3 mt-10' htmlFor='add'>Write your task</label>
           <input {...register('title')} id='addTask' placeholder='Add your task' 
           className=' border p-3' />
           {errors.title && (<p className='text-red-500 text-sm'>{errors.title.message}</p>)}
-          <br />
+        
           <button
   type='submit'
   className="bg-blue-400 p-2 rounded-lg mt-5"
@@ -78,11 +87,11 @@ const complete=(id:number)=>{
 </button>
           <ul className='mt-5'>
             {tasks.map((task) => (
-              <li className='flex flex-row mt-5' key={task.id}>
+              <li className='flex flex-row mt-5 bg-blue-300 p-3' key={task.id}>
                 <span onClick={()=>{complete(task.id)}} className={`flex ${task.isCompleted ? 'line-through text-gray-500': 'text-gray-800'}`}>{task.title}</span>
               
 
-              <svg  onClick={()=>handleEdit(task.id)}  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
+              <svg onClick={()=>handleEdit(task.id)}  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6 ml-auto flex gap-4">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0l-2.695 2.695m-2.13 2.13l-2.695 2.695m-2.13-2.13l-2.695 2.695M6 18l.8-2.685a4.5 4.5 0 011.13-1.897L16.862 4.487m0 0l-2.695 2.695m-2.13 2.13l-2.695 2.695"/>
             </svg>
         

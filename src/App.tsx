@@ -6,7 +6,7 @@ import {useForm} from 'react-hook-form';
 import {yupResolver} from '@hookform/resolvers/yup';
 type Task = {
   id: number,
-  title: string,
+  title:string,
   isCompleted: boolean,
 
 }
@@ -20,7 +20,6 @@ function App() {
 
 const {register,handleSubmit,setValue,reset,formState:{errors},}=useForm<formInputs>({resolver:yupResolver(schema)})
 
-  const [taskName, setTaskName] = useState("");
   const [tasks, setTasks] = React.useState<Task[]>([{
     id: 1, title: "made to do list", isCompleted: false
   },])
@@ -53,6 +52,11 @@ const handleDelete=(id:number)=>{
   setTasks(tasks.filter((task)=>task.id!==id));
 
 }
+const complete=(id:number)=>{
+  setTasks(tasks.map((task)=>
+  task.id ===id ? {...task,isCompleted:!task.isCompleted}:task
+  ))
+}
   
   return (
     <>
@@ -74,7 +78,10 @@ const handleDelete=(id:number)=>{
 </button>
           <ul className='mt-5'>
             {tasks.map((task) => (
-              <li className='flex flex-row mt-5' key={task.id}>{task.title} 
+              <li className='flex flex-row mt-5' key={task.id}>
+                <span onClick={()=>{complete(task.id)}} className={`flex ${task.isCompleted ? 'line-through text-gray-500': 'text-gray-800'}`}>{task.title}</span>
+              
+
               <svg  onClick={()=>handleEdit(task.id)}  xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="w-6 h-6">
               <path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L10.582 16.07a4.5 4.5 0 01-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 011.13-1.897l8.932-8.931zm0 0l-2.695 2.695m-2.13 2.13l-2.695 2.695m-2.13-2.13l-2.695 2.695M6 18l.8-2.685a4.5 4.5 0 011.13-1.897L16.862 4.487m0 0l-2.695 2.695m-2.13 2.13l-2.695 2.695"/>
             </svg>
